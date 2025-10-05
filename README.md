@@ -1,23 +1,110 @@
-BloomWatch (FastAPI + React)
+# BloomWatch
 
-Tech Stack
+**Real-Time Vegetation Monitoring & Bloom Event Prediction**
 
-- Backend: FastAPI, Uvicorn, Pandas, NumPy, SciPy, Requests
-  - Data sources: NASA MODIS/GIBS (tiles/thumbnail), NASA ORNL MODIS Subset (MOD13C1 time series)
-- Frontend: React (Vite), TypeScript, Tailwind CSS, Leaflet, Recharts, dayjs, axios, lucide-react
+---
 
-How to Run
+## Overview
 
-Backend (Terminal 1 in VS Code)
+BloomWatch is a web-based vegetation monitoring platform that leverages **NASA MODIS and GIBS satellite data** to provide:
 
-1. "python -m venv bloom_env"
-2. `.\bloom_env\Scripts\Activate.ps1`
-3. `pip install -r requirements.txt`
-4. `python start_nasa_api.py --reload`
+- Real-time NDVI (Normalized Difference Vegetation Index) analysis for any location on Earth  
+- AI-driven bloom event detection and vegetation health forecasting using **LSTM neural networks**  
+- Actionable agricultural and ecological insights to support farmers, researchers, and environmentalists  
 
-Frontend (Terminal 2 in VS Code)
+Our goal is to **democratize access to satellite vegetation data**, eliminating the need for expensive software or technical expertise. Users can simply input coordinates and date ranges to receive comprehensive vegetation health reports and historical trends.
 
-1. `cd web`
-2. `npm install`
-3. `npm run dev`
+---
 
+## Features
+
+- Real-time NDVI calculation and visualization  
+- Bloom event detection and trend analysis  
+- Forecasting of future NDVI and potential bloom events using LSTM  
+- Interactive map with location-based insights  
+- Synthetic NDVI fallback when real-time data is unavailable  
+
+---
+
+## Data Sources
+
+### NASA Data
+
+| Resource | URL |
+|----------|-----|
+| NASA MODIS NDVI Data | https://modis.ornl.gov/data.html |
+| NASA GIBS (Global Imagery Browse Services) | https://nasa-gibs.github.io/gibs-api-docs/ |
+| NASA CMR (Common Metadata Repository) | https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html |
+| MODIS Products Overview | https://modis.gsfc.nasa.gov/data/dataprod/ |
+
+### Space Agency Partner & Other Data
+
+| Resource | URL |
+|----------|-----|
+| OpenStreetMap Nominatim (Geocoding) | https://nominatim.openstreetmap.org/ |
+| CartoDB Basemap (Map Tiles) | https://carto.com/ |
+| GLOBE Observer Wildflower Bloom Data | https://observer.globe.gov/ |
+
+---
+
+## Installation & Setup
+
+## How to Run Locally
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/yourusername/BloomWatch.git
+cd BloomWatch
+
+Backend
+
+Create a Python virtual environment:
+```bash
+python -m venv bloom_env
+
+Activate the virtual environment:
+
+Windows PowerShell:
+powershell
+```bash
+.\bloom_env\Scripts\Activate.ps1
+
+Windows Command Prompt:
+cmd
+```bash
+.\bloom_env\Scripts\activate.bat
+
+macOS / Linux Terminal:
+```bash
+source bloom_env/bin/activate
+Install backend dependencies:
+
+```bash
+pip install -r requirements.txt
+
+Start the backend server:
+
+```bash
+python start_nasa_api.py --reload
+
+Frontend
+
+Navigate to the frontend directory:
+```bash
+cd web
+
+Install frontend dependencies:
+```bash
+npm install
+
+Run the frontend development server:
+
+```bash
+npm run dev
+
+Open in a web browser:
+Go to http://localhost:5173 (or the port shown in your terminal)
+
+## Contact
+
+**Anmol Thakur** – anmol@example.com
