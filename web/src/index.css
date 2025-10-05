@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-lg;
+}
+
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand/10 text-brand border border-brand/20;
+}
+
+.card {
+  @apply bg-white rounded-xl shadow-md border border-gray-100;
+}
+
+.btn-primary {
+  @apply px-4 py-2 rounded-lg bg-brand text-white hover:bg-brand-dark transition disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
