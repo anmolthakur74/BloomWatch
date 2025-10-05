@@ -99,8 +99,11 @@ npm run dev
 ## Contact
 
 [Anmol Thakur](https://github.com/anmolthakur)  
+
 [Vishal Arunagiri](https://github.com/vishalarunagiri24)
+
 [Kairavi Patra](https://github.com/Kairavipatra)
+
 
 
 
