@@ -55,7 +55,7 @@ Our goal is to **democratize access to satellite vegetation data**, eliminating 
 
 #### Clone the repository
 ```bash
-git clone https://github.com/yourusername/BloomWatch.git
+git clone https://github.com/anmolthakur74/BloomWatch.git
 cd BloomWatch
 ```
 
@@ -99,5 +99,6 @@ npm run dev
 ## Contact
 
 **Anmol Thakur** – anmol@example.com
+
 
 
