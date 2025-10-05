@@ -51,60 +51,40 @@ Our goal is to **democratize access to satellite vegetation data**, eliminating 
 
 ## How to Run Locally
 
-### Step 1: Clone the Repository
+### Backend & Frontend
+
 ```bash
+# Clone the repository
 git clone https://github.com/yourusername/BloomWatch.git
 cd BloomWatch
 
-Backend
-
-Create a Python virtual environment:
-```bash
+# Create Python virtual environment
 python -m venv bloom_env
 
-Activate the virtual environment:
-
-Windows PowerShell:
-powershell
-```bash
+# Activate virtual environment
+# Windows PowerShell
 .\bloom_env\Scripts\Activate.ps1
+# Windows Command Prompt
+# .\bloom_env\Scripts\activate.bat
+# macOS / Linux
+# source bloom_env/bin/activate
 
-Windows Command Prompt:
-cmd
-```bash
-.\bloom_env\Scripts\activate.bat
-
-macOS / Linux Terminal:
-```bash
-source bloom_env/bin/activate
-Install backend dependencies:
-
-```bash
+# Install backend dependencies
 pip install -r requirements.txt
 
-Start the backend server:
-
-```bash
+# Start backend server
 python start_nasa_api.py --reload
 
-Frontend
-
-Navigate to the frontend directory:
-```bash
+# Frontend setup
 cd web
-
-Install frontend dependencies:
-```bash
 npm install
-
-Run the frontend development server:
-
-```bash
 npm run dev
 
-Open in a web browser:
-Go to http://localhost:5173 (or the port shown in your terminal)
+# Open in a web browser:
+# Go to http://localhost:5173 (or the port shown in your terminal)
+```
 
 ## Contact
 
 **Anmol Thakur** – anmol@example.com
+
