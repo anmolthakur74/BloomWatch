@@ -2,17 +2,26 @@
 nasa_data_service.py
 NASA-only data access layer for BloomWatch
 
-Uses:
+Features:
 - MODIS ORNL Subset API (NDVI time series)
 - NASA GIBS (NDVI visualization thumbnails)
-
-NO Google Earth Engine required
+- Dynamic dataset/band handling for long-term compatibility
+- Environment variable configuration for easy updates
 """
 
+import os
 import requests
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
+
+# ----------------------------------------------------------------------
+# Configuration via environment variables (with defaults)
+# ----------------------------------------------------------------------
+MODIS_BASE_URL = os.getenv("MODIS_BASE_URL", "https://modis.ornl.gov/rst/api/v1")
+MODIS_DATASET = os.getenv("MODIS_DATASET", "MOD13C1")
+MODIS_BAND = os.getenv("MODIS_BAND", "NDVI")
+GIBS_WMS = os.getenv("GIBS_WMS", "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi")
 
 
 class NASAMODISService:
@@ -20,14 +29,12 @@ class NASAMODISService:
     Service wrapper for NASA MODIS NDVI data
     """
 
-    ORNL_POINT_API = "https://modis.ornl.gov/rst/api/v1/MOD13C1/point"
-    GIBS_WMS = "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi"
-
     def __init__(self, timeout: int = 60):
         self.timeout = timeout
         self.headers = {
             "User-Agent": "BloomWatch/2.0 (NASA MODIS Client)"
         }
+        self.api_url = f"{MODIS_BASE_URL}/{MODIS_DATASET}/point"
 
     # ------------------------------------------------------------------
     # NDVI TIME SERIES
@@ -37,32 +44,33 @@ class NASAMODISService:
         latitude: float,
         longitude: float,
         roi_size_degrees: float,
-        start_date: str,
-        end_date: str
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        band: Optional[str] = None
     ) -> pd.DataFrame:
         """
         Fetch NDVI time-series from NASA ORNL MODIS Subset API
-
-        Returns DataFrame:
-        ┌────────────┬────────┐
-        │ Date       │ NDVI   │
-        └────────────┴────────┘
+        Returns DataFrame with columns: Date, NDVI
         """
+
+        band = band or MODIS_BAND
+        start_date = start_date or "2000-01-01"
+        end_date = end_date or date.today().strftime("%Y-%m-%d")
 
         params = {
             "latitude": latitude,
             "longitude": longitude,
             "startDate": start_date,
             "endDate": end_date,
-            "band": "NDVI"
+            "band": band
         }
 
         try:
             response = requests.get(
-                self.ORNL_POINT_API,
+                self.api_url,
                 params=params,
-                timeout=self.timeout,
-                headers=self.headers
+                headers=self.headers,
+                timeout=self.timeout
             )
             response.raise_for_status()
             payload = response.json()
@@ -76,10 +84,8 @@ class NASAMODISService:
         for item in data:
             date_str = item.get("calendar_date")
             value = item.get("value")
-
             if date_str is None or value is None:
                 continue
-
             try:
                 ndvi = float(value) * float(scale)
                 rows.append((pd.to_datetime(date_str), ndvi))
@@ -89,12 +95,7 @@ class NASAMODISService:
         if not rows:
             return pd.DataFrame(columns=["Date", "NDVI"])
 
-        df = (
-            pd.DataFrame(rows, columns=["Date", "NDVI"])
-            .sort_values("Date")
-            .reset_index(drop=True)
-        )
-
+        df = pd.DataFrame(rows, columns=["Date", "NDVI"]).sort_values("Date").reset_index(drop=True)
         return df
 
     # ------------------------------------------------------------------
@@ -105,14 +106,17 @@ class NASAMODISService:
         latitude: float,
         longitude: float,
         roi_size_degrees: float,
-        start_date: str,
-        end_date: str,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         width: int = 512,
         height: int = 512
     ) -> str:
         """
         Generate NASA GIBS NDVI thumbnail URL
         """
+
+        start_date = start_date or "2000-01-01"
+        end_date = end_date or date.today().strftime("%Y-%m-%d")
 
         half = roi_size_degrees / 2
         bbox = (
@@ -146,9 +150,8 @@ class NASAMODISService:
             "time": mid_date
         }
 
-        # Construct final URL
         query = "&".join(f"{k}={v}" for k, v in params.items())
-        return f"{self.GIBS_WMS}?{query}"
+        return f"{GIBS_WMS}?{query}"
 
 
 # ----------------------------------------------------------------------
