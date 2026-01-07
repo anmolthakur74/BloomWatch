@@ -3,12 +3,12 @@ fastapi==0.114.2
 uvicorn==0.30.6
 
 # Data processing
-pandas==2.1.3
 numpy==1.26.2
+pandas==2.1.3
 scipy==1.11.2
 scikit-learn==1.3.2
 
-# ML (CPU-only, REQUIRED for free tier)
+# ML (CPU-only)
 tensorflow-cpu==2.15.0
 
 # Networking & utilities
