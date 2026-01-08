@@ -122,7 +122,6 @@ async function fetchAll() {
     };
 
     // ---------------- Fetch NDVI ----------------
-    // ---------------- Fetch NDVI ----------------
 const ndviRes = await axios.post(`${API_BASE}/api/ndvi`, formattedRequestBody);
 const ndviRecords = ndviRes.data.records ?? [];
 setNdvi(ndviRecords);
@@ -328,7 +327,13 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
         </section>
 
         {/* NDVI Analytics / Report */}
-{analysis?.report ? (
+{!hasResults ? (
+  <section className="lg:col-span-3">
+    <p className="text-gray-500 text-center py-6">
+      Select a region and click <strong>Run</strong> to view NDVI data.
+    </p>
+  </section>
+) : analysis?.report ? (
   <section className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
     {/* Summary Card */}
     <div className="card glass p-5 shadow-sm">
@@ -388,36 +393,37 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
     </div>
 
     {/* Bloom Peaks Table Card */}
-{analysis.report.peaks?.total_peaks > 0 && (
-  <div className="card glass p-5 shadow-sm md:col-span-2">
-    <h3 className="font-semibold text-lg mb-3">Detected Bloom Events ({analysis.report.peaks.total_peaks})</h3>
-    <div className="overflow-x-auto max-h-64 border-t border-gray-200 pt-2">
-      <table className="min-w-full text-left text-sm">
-        <thead className="bg-gray-100"> {/* Removed sticky */}
-          <tr>
-            <th className="px-3 py-2">Serial No.</th>
-            <th className="px-3 py-2">Date</th>
-            <th className="px-3 py-2">NDVI</th>
-          </tr>
-        </thead>
-        <tbody>
-          {analysis.report.peaks.peak_dates.map((date: string, i: number) => (
-            <tr key={i} className="border-b border-gray-200 hover:bg-gray-50">
-              <td className="px-3 py-2">{i + 1}</td>
-              <td className="px-3 py-2">{date}</td>
-              <td className="px-3 py-2">{analysis.report.peaks.peak_ndvi_values[i]?.toFixed(3)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-)}
-
+    {analysis.report.peaks?.total_peaks > 0 && (
+      <div className="card glass p-5 shadow-sm md:col-span-2">
+        <h3 className="font-semibold text-lg mb-3">Detected Bloom Events ({analysis.report.peaks.total_peaks})</h3>
+        <div className="overflow-x-auto max-h-64 border-t border-gray-200 pt-2">
+          <table className="min-w-full text-left text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-3 py-2">Serial No.</th>
+                <th className="px-3 py-2">Date</th>
+                <th className="px-3 py-2">NDVI</th>
+              </tr>
+            </thead>
+            <tbody>
+              {analysis.report.peaks.peak_dates.map((date: string, i: number) => (
+                <tr key={i} className="border-b border-gray-200 hover:bg-gray-50">
+                  <td className="px-3 py-2">{i + 1}</td>
+                  <td className="px-3 py-2">{date}</td>
+                  <td className="px-3 py-2">{analysis.report.peaks.peak_ndvi_values[i]?.toFixed(3)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )}
   </section>
 ) : (
   <section className="lg:col-span-3">
-    <p className="text-gray-600 text-center py-6">No NDVI data available for the selected region and date range. This can happen if the area has no vegetation (e.g., ocean, desert, ice) or if satellite imagery is unavailable for the selected dates.</p>
+    <p className="text-gray-600 text-center py-6">
+      No NDVI data available for the selected region and date range. This can happen if the area has no vegetation (e.g., ocean, desert, ice) or if satellite imagery is unavailable for the selected dates.
+    </p>
   </section>
 )}
 
@@ -425,3 +431,4 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
     </div>
   )
 }
+
