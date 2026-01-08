@@ -74,11 +74,10 @@ The backend API for BloomWatch is deployed on Render.
 
 ## Project Architecture
 
-1. User selects location, date range, and ROI size from the frontend  
-2. Frontend sends requests to the backend API  
-3. Backend processes satellite data using Google Earth Engine  
-4. NDVI values and bloom events are computed server-side  
-5. Results are returned and visualized on the frontend  
+1. The user selects a geographic location, date range, and region of interest (ROI) size from the frontend interface.
+2. The frontend sends structured API requests to the backend service.
+3. The backend retrieves and processes satellite imagery using Google Earth Engine (GEE).
+4. NDVI time series, bloom events, and vegetation analytics are computed server-side and returned to the frontend for visualization.
 
 ---
 
@@ -107,6 +106,7 @@ npm run dev
 **Anmol Thakur**
 
 GitHub: https://github.com/anmolthakur74
+
 
 
 
