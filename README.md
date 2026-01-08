@@ -18,6 +18,8 @@ The backend leverages **Google Earth Engine (GEE)** for large-scale satellite da
 
 The frontend application is deployed and publicly accessible.
 
+**Live URL:** https://bloom-watch-indol.vercel.app/
+
 The backend API for BloomWatch is deployed on Render.
 
 > Backend services are intentionally kept private and are not exposed publicly.  
@@ -55,7 +57,7 @@ The backend API for BloomWatch is deployed on Render.
 
 ### Deployment
 - Frontend: Vercel
-- Backend: Private API service
+- Backend: Render
 
 ---
 
@@ -101,7 +103,9 @@ npm run dev
 ```
 
 **Author**
+
 Anmol Thakur
 
 GitHub: https://github.com/anmolthakur74
+
 
