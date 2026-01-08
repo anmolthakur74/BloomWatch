@@ -1,22 +1,16 @@
-"""
-FastAPI backend for BloomWatch using NASA MODIS & GIBS data
-"""
+from .gee_service import initialize_ee
+initialize_ee()  # Initialize Google Earth Engine at startup
 
-from typing import List, Tuple
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 import pandas as pd
-import numpy as np
 from scipy.signal import find_peaks
-from .nasa_data_service import nasa_service
-from .bloom_analysis import (
-    lstm_forecast,
-    generate_user_report,
-    format_user_friendly_output
-)
 
-# -------------------- Models --------------------
+from .nasa_data_service import nasa_service
+from .bloom_analysis import lstm_forecast, generate_user_report, format_user_friendly_output
+
+# -------------------- Request Models --------------------
 
 class RegionRequest(BaseModel):
     latitude: float
@@ -41,10 +35,9 @@ class AnalysisRequest(RegionRequest):
     future_steps: int = 60
     look_back: int = 30
 
+# -------------------- App Setup --------------------
 
-# -------------------- App --------------------
-
-app = FastAPI(title="BloomWatch NASA API", version="2.0.0")
+app = FastAPI(title="BloomWatch NDVI API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -93,10 +86,7 @@ def peaks(req: PeaksRequest):
             return {"peaks": [], "count": 0}
 
         peak_idx, _ = find_peaks(df["NDVI"].values, height=req.threshold)
-        return {
-            "peaks": peak_idx.tolist(),
-            "count": len(peak_idx),
-        }
+        return {"peaks": peak_idx.tolist(), "count": len(peak_idx)}
     except Exception as e:
         raise HTTPException(500, str(e))
 
@@ -105,11 +95,7 @@ def peaks(req: PeaksRequest):
 def forecast(req: ForecastRequest):
     try:
         df = get_ndvi_data(req)
-        dates, values = lstm_forecast(
-            df,
-            future_steps=req.future_steps,
-            look_back=req.look_back,
-        )
+        dates, values = lstm_forecast(df, future_steps=req.future_steps, look_back=req.look_back)
 
         if dates is None:
             return {"skipped": True, "reason": "Water-dominant region"}
@@ -128,18 +114,9 @@ def analysis(req: AnalysisRequest):
         df = get_ndvi_data(req)
         peak_idx, _ = find_peaks(df["NDVI"].values, height=req.threshold)
 
-        forecast_dates, forecast_values = lstm_forecast(
-            df,
-            future_steps=req.future_steps,
-            look_back=req.look_back,
-        )
+        forecast_dates, forecast_values = lstm_forecast(df, future_steps=req.future_steps, look_back=req.look_back)
 
-        report = generate_user_report(
-            df,
-            forecast_dates,
-            forecast_values,
-            peak_idx.tolist(),
-        )
+        report = generate_user_report(df, forecast_dates, forecast_values, peak_idx.tolist())
 
         return {
             "report": report,
