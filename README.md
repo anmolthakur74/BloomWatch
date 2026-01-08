@@ -102,10 +102,11 @@ npm install
 npm run dev
 ```
 
-**Author**
+## Author
 
-Anmol Thakur
+**Anmol Thakur**
 
 GitHub: https://github.com/anmolthakur74
+
 
 
