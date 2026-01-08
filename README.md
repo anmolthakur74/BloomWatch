@@ -18,7 +18,10 @@ The backend leverages **Google Earth Engine (GEE)** for large-scale satellite da
 
 The frontend application is deployed and publicly accessible.
 
-> Backend services are intentionally kept private and are not exposed publicly.
+The backend API for BloomWatch is deployed on Render.
+
+> Backend services are intentionally kept private and are not exposed publicly.  
+> The frontend communicates with the backend through secure configuration, following standard production best practices for API security and access control.
 
 ---
 
@@ -99,4 +102,6 @@ npm run dev
 
 **Author**
 Anmol Thakur
+
 GitHub: https://github.com/anmolthakur74
+
