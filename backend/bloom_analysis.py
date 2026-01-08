@@ -1,6 +1,5 @@
 """
-bloom_analysis.py
-Utility functions for analyzing bloom events using NASA MODIS NDVI data
+Utility functions for analyzing bloom events using NDVI data from Google Earth Engine
 """
 
 import pandas as pd
@@ -370,3 +369,4 @@ def format_user_friendly_output(report):
             output.append(f"  Peak {i+1}: {date} (NDVI: {ndvi})")
     
     return "\n".join(output)
+
