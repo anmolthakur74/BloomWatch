@@ -1,35 +1,37 @@
-"""
-Google Earth Engine (GEE) service functions
-"""
-
 import ee
 import os
 import pandas as pd
 from datetime import datetime, timedelta
+import tempfile
+import json
 
 def initialize_ee():
     """
     Initialize the Google Earth Engine API using project-based auth.
+    Works with local authentication or Render env variable JSON.
     """
     project_id = os.environ.get("GEE_PROJECT_ID")
-
     if not project_id:
-        raise RuntimeError(
-            "GEE_PROJECT_ID not set. Run:\n"
-            "setx GEE_PROJECT_ID \"your-project-id\""
-        )
+        raise RuntimeError("GEE_PROJECT_ID not set in environment variables.")
 
-    service_account = os.environ.get("GEE_SERVICE_ACCOUNT")
-    json_path = os.environ.get("GEE_SERVICE_ACCOUNT_JSON")
+    # Read JSON from env variable
+    service_account_json_str = os.environ.get("GEE_SERVICE_ACCOUNT_JSON")
 
-    if service_account and json_path:
-        # For deployment (service account)
+    if service_account_json_str:
+        # Write JSON string to a temporary file for ee
+        with tempfile.NamedTemporaryFile(mode="w+", delete=False) as f:
+            f.write(service_account_json_str)
+            json_path = f.name
+
+        # Extract service account email from JSON
+        service_account_email = json.loads(service_account_json_str)['client_email']
+
         credentials = ee.ServiceAccountCredentials(
-            service_account, key_file=json_path
+            service_account_email, key_file=json_path
         )
         ee.Initialize(credentials, project=project_id)
     else:
-        # For local user authentication
+        # Local initialization (user auth)
         ee.Initialize(project=project_id)
 
     print("Earth Engine initialized with project:", project_id)
