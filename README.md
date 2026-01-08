@@ -1,111 +1,102 @@
 # BloomWatch
 
-**Real-Time Vegetation Monitoring & Bloom Event Prediction**
+Satellite-Based Vegetation Monitoring & Bloom Event Analysis
 
 ---
 
 ## Overview
 
-BloomWatch is a web-based vegetation monitoring platform that leverages **NASA MODIS and GIBS satellite data** to provide:
+BloomWatch is a full-stack web application designed to monitor vegetation health and detect bloom events using satellite-derived **NDVI (Normalized Difference Vegetation Index)** data.
 
-- Real-time NDVI (Normalized Difference Vegetation Index) analysis for any location on Earth  
-- AI-driven bloom event detection and vegetation health forecasting using **LSTM neural networks**  
-- Actionable agricultural and ecological insights to support farmers, researchers, and environmentalists  
+The platform enables users to analyze historical vegetation trends for any location on Earth through an interactive map and time-series analytics. It is built for applications in agriculture, environmental monitoring, and ecological research.
 
-Our goal is to **democratize access to satellite vegetation data**, eliminating the need for expensive software or technical expertise. Users can simply input coordinates and date ranges to receive comprehensive vegetation health reports and historical trends.
+The backend leverages **Google Earth Engine (GEE)** for large-scale satellite data processing, while the frontend delivers an intuitive, responsive user experience.
+
+---
+
+## Live Application
+
+The frontend application is deployed and publicly accessible.
+
+> Backend services are intentionally kept private and are not exposed publicly.
 
 ---
 
 ## Features
 
-- Real-time NDVI calculation and visualization  
-- Bloom event detection and trend analysis  
-- Forecasting of future NDVI and potential bloom events using LSTM  
-- Interactive map with location-based insights  
-- Synthetic NDVI fallback when real-time data is unavailable  
+- Global NDVI analysis using satellite imagery  
+- Interactive map with region-of-interest (ROI) visualization  
+- NDVI time-series charts  
+- Bloom event detection using peak analysis  
+- Vegetation health classification  
+- Human-readable location names via reverse geocoding  
+- Optimized handling of large satellite datasets  
+
+---
+
+## Technology Stack
+
+### Frontend
+- React (Vite)
+- TypeScript
+- Leaflet
+- Recharts
+- Tailwind CSS
+
+### Backend
+- FastAPI (Python)
+- Google Earth Engine (GEE)
+- NumPy
+- Pandas
+- SciPy
+
+### Deployment
+- Frontend: Vercel
+- Backend: Private API service
 
 ---
 
 ## Data Sources
 
-### NASA Data
-
-| Resource | URL |
-|----------|-----|
-| NASA MODIS NDVI Data | https://modis.ornl.gov/data.html |
-| NASA GIBS (Global Imagery Browse Services) | https://nasa-gibs.github.io/gibs-api-docs/ |
-| NASA CMR (Common Metadata Repository) | https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html |
-| MODIS Products Overview | https://modis.gsfc.nasa.gov/data/dataprod/ |
-
-### Space Agency Partner & Other Data
-
-| Resource | URL |
-|----------|-----|
-| OpenStreetMap Nominatim (Geocoding) | https://nominatim.openstreetmap.org/ |
-| CartoDB Basemap (Map Tiles) | https://carto.com/ |
-| GLOBE Observer Wildflower Bloom Data | https://observer.globe.gov/ |
+- **Google Earth Engine**
+  - MODIS NDVI satellite products
+- **OpenStreetMap Nominatim**
+  - Reverse geocoding services
+- **CartoDB**
+  - Base map tiles
 
 ---
 
-## Installation & Setup
+## Project Architecture
 
-## How to Run Locally
+1. User selects location, date range, and ROI size from the frontend  
+2. Frontend sends requests to the backend API  
+3. Backend processes satellite data using Google Earth Engine  
+4. NDVI values and bloom events are computed server-side  
+5. Results are returned and visualized on the frontend  
 
-### Backend
+---
 
-#### Clone the repository
+## Running Locally
+
+### Backend Setup
+
 ```bash
 git clone https://github.com/anmolthakur74/BloomWatch.git
 cd BloomWatch
-```
-
-#### Create Python virtual environment
-```bash
 python -m venv bloom_env
-```
-
-#### Activate virtual environment
-
-#### Windows PowerShell
-```bash
 .\bloom_env\Scripts\Activate.ps1
-```
-#### Windows Command Prompt
-```bash
-.\bloom_env\Scripts\activate.bat
-```
-#### macOS/Linux
-```bash
-source bloom_env/bin/activate
-```
-
-#### Install backend dependencies
-```bash
 pip install -r requirements.txt
+python -m uvicorn backend.main_gee:app --reload
 ```
 
-#### Start backend server
-```bash
-python start_nasa_api.py --reload
-```
-
-### Frontend
+### Frontend Setup
 ```bash
 cd web
 npm install
 npm run dev
 ```
 
-## Contact
-
-[Anmol Thakur](https://github.com/anmolthakur74)  
-
-[Vishal Arunagiri](https://github.com/vishalarunagiri24)
-
-[Kairavi Patra](https://github.com/Kairavipatra)
-
-
-
-
-
-
+**Author**
+Anmol Thakur
+GitHub: https://github.com/anmolthakur74
