@@ -17,4 +17,5 @@ requests>=2.32.3,<3
 python-dateutil>=2.8.2,<2.10
 
 # Google Earth Engine
-earthengine-api>=0.1.323
+earthengine-api==1.7.4
+
