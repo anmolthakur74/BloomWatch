@@ -7,7 +7,7 @@ from pydantic import BaseModel
 import pandas as pd
 from scipy.signal import find_peaks
 
-from .nasa_data_service import nasa_service
+from .gee_data_service import gee_service
 from .bloom_analysis import lstm_forecast, generate_user_report, format_user_friendly_output
 
 # -------------------- Request Models --------------------
@@ -18,7 +18,7 @@ class RegionRequest(BaseModel):
     roi_size_degrees: float = 5.0
     start_date: str = "2000-01-01"
     end_date: str
-    data_source: str = "nasa"
+    data_source: str = "gee"
 
 
 class PeaksRequest(RegionRequest):
@@ -50,19 +50,19 @@ app.add_middleware(
 # -------------------- Helpers --------------------
 
 def get_ndvi_data(req: RegionRequest) -> pd.DataFrame:
-    return nasa_service.get_historical_ndvi_data(
-        req.latitude,
-        req.longitude,
-        req.roi_size_degrees,
-        req.start_date,
-        req.end_date,
+    return gee_service.get_historical_ndvi_data(
+        latitude=req.latitude,
+        longitude=req.longitude,
+        roi_size_degrees=req.roi_size_degrees,
+        start_date=req.start_date,
+        end_date=req.end_date
     )
 
 # -------------------- Routes --------------------
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "data_sources": ["nasa"]}
+    return {"status": "ok", "data_sources": ["gee"]}
 
 
 @app.post("/api/ndvi")
