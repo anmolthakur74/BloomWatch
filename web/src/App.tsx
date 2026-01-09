@@ -348,7 +348,7 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
 ) : analysis?.report ? (
   // Case 3: Analysis available, show report
   <section className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-    
+
     {/* Summary Card */}
     <div className="card glass p-5 shadow-sm">
       <h3 className="font-semibold text-lg mb-3">Summary</h3>
@@ -357,79 +357,52 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
     </div>
 
     {/* Current Status Card */}
-<div className="card glass p-5 shadow-sm">
-  <h3 className="font-semibold text-lg mb-3">Current Vegetation Status</h3>
+    <div className="card glass p-5 shadow-sm">
+      <h3 className="font-semibold text-lg mb-3">Current Vegetation Status</h3>
 
-  {/* Vegetation Type */}
-  <p>
-    <span className="font-medium">Vegetation Type:</span>{' '}
-    {analysis.report.current_status?.vegetation_type ?? 'N/A'}
-  </p>
+      {/* Vegetation Type */}
+      <p>
+        <span className="font-medium">Vegetation Type:</span>{' '}
+        {analysis.report.current_status?.vegetation_type ?? 'N/A'}
+      </p>
 
-  {/* Health Status */}
-  <p>
-    <span className="font-medium">Health Status:</span>{' '}
-    <span
-      className={`ml-2 px-2 py-0.5 rounded text-white ${
-        {
-          "Non-vegetated/Bare Area": "bg-gray-500",
-          "Improving": "bg-green-500",
-          "Growing": "bg-green-500",
-          "Healthy": "bg-green-700",
-          "Thriving": "bg-green-700",
-          "Peak Health": "bg-green-700",
-          "Stable": "bg-yellow-500",
-          "Declining": "bg-red-600",
-          "Stressed": "bg-orange-600",
-          "Peak Declining": "bg-red-600"
-        }[analysis.report.current_status?.health_status ?? ""] || "bg-gray-400"
-      }`}
-    >
-      {analysis.report.current_status?.health_status ?? 'N/A'}
-    </span>
-  </p>
+      {/* Health Status with colored badge */}
+      <p>
+        <span className="font-medium">Health Status:</span>{' '}
+        <span
+          className={`ml-2 px-2 py-0.5 rounded text-white ${
+            {
+              "Non-vegetated/Bare Area": "bg-gray-500",
+              "Improving": "bg-green-500",
+              "Growing": "bg-green-500",
+              "Healthy": "bg-green-700",
+              "Thriving": "bg-green-700",
+              "Peak Health": "bg-green-700",
+              "Stable": "bg-yellow-500",
+              "Declining": "bg-red-600",
+              "Stressed": "bg-orange-600",
+              "Peak Declining": "bg-red-600"
+            }[analysis.report.current_status?.health_status ?? ""] || "bg-gray-400"
+          }`}
+        >
+          {analysis.report.current_status?.health_status ?? 'N/A'}
+        </span>
+      </p>
 
-  {/* Current NDVI */}
-  <p>
-    <span className="font-medium">Current NDVI:</span>{' '}
-    {analysis.report.current_status?.current_ndvi !== undefined
-      ? analysis.report.current_status.current_ndvi.toFixed(3)
-      : 'N/A'}
-  </p>
+      {/* Current NDVI (plain) */}
+      <p>
+        <span className="font-medium">Current NDVI:</span>{' '}
+        {analysis.report.current_status?.current_ndvi !== undefined
+          ? analysis.report.current_status.current_ndvi.toFixed(3)
+          : 'N/A'}
+      </p>
 
-  {/* Date */}
-  <p>
-    <span className="font-medium">Date:</span>{' '}
-    {analysis.report.current_status?.date ?? 'N/A'}
-  </p>
-</div>
-
-  {/* Current NDVI */}
-  <p>
-    <span className="font-medium">Current NDVI:</span>{' '}
-    <span className={`ml-2 px-2 py-0.5 rounded text-white ${
-      analysis.report.current_status?.current_ndvi !== undefined
-        ? analysis.report.current_status.current_ndvi >= 0.7
-          ? 'bg-green-700'
-          : analysis.report.current_status.current_ndvi >= 0.4
-          ? 'bg-green-500'
-          : analysis.report.current_status.current_ndvi >= 0.2
-          ? 'bg-yellow-500'
-          : 'bg-red-600'
-        : 'bg-gray-400'
-    }`}>
-      {analysis.report.current_status?.current_ndvi !== undefined
-        ? analysis.report.current_status.current_ndvi.toFixed(3)
-        : 'N/A'}
-    </span>
-  </p>
-
-  {/* Date */}
-  <p>
-    <span className="font-medium">Date:</span>{' '}
-    {analysis.report.current_status?.date ?? 'N/A'}
-  </p>
-</div>
+      {/* Date (plain) */}
+      <p>
+        <span className="font-medium">Date:</span>{' '}
+        {analysis.report.current_status?.date ?? 'N/A'}
+      </p>
+    </div>
 
     {/* Trends Card */}
     <div className="card glass p-5 shadow-sm">
@@ -497,12 +470,11 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
 
   </section>
 ) : null /* Case 4: fallback, render nothing if none of the above */}
-
-
       </main>
     </div>
   )
 }
+
 
 
 
