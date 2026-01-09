@@ -29,6 +29,7 @@ export function App() {
   const [info, setInfo] = useState<string | null>(null)
   const [analysis, setAnalysis] = useState<any>(null)
   const [hasResults, setHasResults] = useState(false)
+  const [hasRun, setHasRun] = useState(false)
   const [placeName, setPlaceName] = useState<string>('')
   const [locationLoading, setLocationLoading] = useState(false)
   const [roiColor, setRoiColor] = useState<string>('blue')
@@ -92,6 +93,7 @@ export function App() {
 
   // ---------------- Fetch NDVI & Peaks & Analysis ----------------
 async function fetchAll() {
+  setHasRun(true);       
   setLoading(true);
   setHasResults(false);
   setNdvi([]);
@@ -325,16 +327,28 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
             </ResponsiveContainer>
           </div>
         </section>
-
+        
         {/* NDVI Analytics / Report */}
-{!hasResults ? (
+{!hasRun ? (
+  // Case 1: User hasn't run anything yet
   <section className="lg:col-span-3">
     <p className="text-gray-500 text-center py-6">
       Select a region and click <strong>Run</strong> to view NDVI data.
     </p>
   </section>
+) : ndvi.length === 0 ? (
+  // Case 2: User ran but no NDVI data found
+  <section className="lg:col-span-3">
+    <p className="text-gray-600 text-center py-6">
+      No NDVI data available for the selected region and date range.<br />
+      This can happen if the area has no vegetation (e.g., ocean, desert, ice)<br />
+      or if satellite imagery is unavailable for the selected dates.
+    </p>
+  </section>
 ) : analysis?.report ? (
+  // Case 3: Analysis available, show report
   <section className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
+    
     {/* Summary Card */}
     <div className="card glass p-5 shadow-sm">
       <h3 className="font-semibold text-lg mb-3">Summary</h3>
@@ -343,57 +357,41 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
     </div>
 
     {/* Current Status Card */}
-<div className="card glass p-5 shadow-sm">
-  <h3 className="font-semibold text-lg mb-3">Current Vegetation Status</h3>
-
-  <p>
-    <span className="font-medium">Vegetation Type:</span>{' '}
-    {analysis.report.current_status?.vegetation_type ?? 'N/A'}
-  </p>
-
-  <p>
-    <span className="font-medium">Health Status:</span>
-    <span
-      className={`ml-2 px-2 py-0.5 rounded text-white ${
-        analysis.report.current_status?.health_status &&
-        (
-          analysis.report.current_status.health_status.includes('Peak') ||
-          analysis.report.current_status.health_status.includes('Excellent') ||
-          analysis.report.current_status.health_status.includes('Very') ||
-          analysis.report.current_status.health_status.includes('Healthy')
-        )
-          ? 'bg-green-700'
-          : analysis.report.current_status?.health_status?.includes('Declining')
-          ? 'bg-red-600'
-          : 'bg-yellow-500'
-      }`}
-    >
-      {analysis.report.current_status?.health_status ?? 'N/A'}
-    </span>
-  </p>
-
-  <p>
-    <span className="font-medium">Current NDVI:</span>{' '}
-    {analysis.report.current_status?.current_ndvi !== undefined
-      ? analysis.report.current_status.current_ndvi.toFixed(3)
-      : 'N/A'}
-  </p>
-
-  <p>
-    <span className="font-medium">Date:</span>{' '}
-    {analysis.report.current_status?.date ?? 'N/A'}
-  </p>
-</div>
+    <div className="card glass p-5 shadow-sm">
+      <h3 className="font-semibold text-lg mb-3">Current Vegetation Status</h3>
+      <p><span className="font-medium">Vegetation Type:</span> {analysis.report.current_status?.vegetation_type ?? 'N/A'}</p>
+      <p>
+        <span className="font-medium">Health Status:</span>{' '}
+        <span
+          className={`ml-2 px-2 py-0.5 rounded text-white ${
+            analysis.report.current_status?.health_status?.includes('Peak') ||
+            analysis.report.current_status?.health_status?.includes('Excellent') ||
+            analysis.report.current_status?.health_status?.includes('Very') ||
+            analysis.report.current_status?.health_status?.includes('Healthy')
+              ? 'bg-green-700'
+              : analysis.report.current_status?.health_status?.includes('Declining')
+              ? 'bg-red-600'
+              : 'bg-yellow-500'
+          }`}
+        >
+          {analysis.report.current_status?.health_status ?? 'N/A'}
+        </span>
+      </p>
+      <p><span className="font-medium">Current NDVI:</span> {analysis.report.current_status?.current_ndvi !== undefined ? analysis.report.current_status.current_ndvi.toFixed(3) : 'N/A'}</p>
+      <p><span className="font-medium">Date:</span> {analysis.report.current_status?.date ?? 'N/A'}</p>
+    </div>
 
     {/* Trends Card */}
     <div className="card glass p-5 shadow-sm">
       <h3 className="font-semibold text-lg mb-3">Trends</h3>
       <p><span className="font-medium">Mean NDVI:</span> {analysis.report.trends?.mean_ndvi ?? 'N/A'}</p>
       <p><span className="font-medium">Trend Value:</span> {analysis.report.trends?.trend_value ?? 'N/A'}</p>
-      <p><span className="font-medium">Trend Direction:</span> 
+      <p>
+        <span className="font-medium">Trend Direction:</span>{' '}
         <span className={`ml-2 px-2 py-0.5 rounded text-white ${
           analysis.report.trends?.trend_direction === 'Improving' ? 'bg-green-600' :
-          analysis.report.trends?.trend_direction === 'Declining' ? 'bg-red-600' : 'bg-yellow-500'}`}>
+          analysis.report.trends?.trend_direction === 'Declining' ? 'bg-red-600' : 'bg-yellow-500'
+        }`}>
           {analysis.report.trends?.trend_direction ?? 'N/A'}
         </span>
       </p>
@@ -446,18 +444,15 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
         </div>
       </div>
     )}
+
   </section>
-) : (
-  <section className="lg:col-span-3">
-    <p className="text-gray-600 text-center py-6">
-      No NDVI data available for the selected region and date range. This can happen if the area has no vegetation (e.g., ocean, desert, ice) or if satellite imagery is unavailable for the selected dates.
-    </p>
-  </section>
-)}
+) : null /* Case 4: fallback, render nothing if none of the above */}
+
 
       </main>
     </div>
   )
 }
+
 
 
