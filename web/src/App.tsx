@@ -343,19 +343,47 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
     </div>
 
     {/* Current Status Card */}
-    <div className="card glass p-5 shadow-sm">
-      <h3 className="font-semibold text-lg mb-3">Current Vegetation Status</h3>
-      <p><span className="font-medium">Vegetation Type:</span> {analysis.report.current_status?.vegetation_type ?? 'N/A'}</p>
-      <p><span className="font-medium">Health Status:</span> 
-        <span className={`ml-2 px-2 py-0.5 rounded text-white ${
-          analysis.report.current_status?.health_status?.includes('Healthy') ? 'bg-green-600' :
-          analysis.report.current_status?.health_status?.includes('Declining') ? 'bg-red-600' : 'bg-yellow-500'}`}>
-          {analysis.report.current_status?.health_status ?? 'N/A'}
-        </span>
-      </p>
-      <p><span className="font-medium">Current NDVI:</span> {analysis.report.current_status?.current_ndvi ?? 'N/A'}</p>
-      <p><span className="font-medium">Date:</span> {analysis.report.current_status?.date ?? 'N/A'}</p>
-    </div>
+<div className="card glass p-5 shadow-sm">
+  <h3 className="font-semibold text-lg mb-3">Current Vegetation Status</h3>
+
+  <p>
+    <span className="font-medium">Vegetation Type:</span>{' '}
+    {analysis.report.current_status?.vegetation_type ?? 'N/A'}
+  </p>
+
+  <p>
+    <span className="font-medium">Health Status:</span>
+    <span
+      className={`ml-2 px-2 py-0.5 rounded text-white ${
+        analysis.report.current_status?.health_status &&
+        (
+          analysis.report.current_status.health_status.includes('Peak') ||
+          analysis.report.current_status.health_status.includes('Excellent') ||
+          analysis.report.current_status.health_status.includes('Very') ||
+          analysis.report.current_status.health_status.includes('Healthy')
+        )
+          ? 'bg-green-700'
+          : analysis.report.current_status?.health_status?.includes('Declining')
+          ? 'bg-red-600'
+          : 'bg-yellow-500'
+      }`}
+    >
+      {analysis.report.current_status?.health_status ?? 'N/A'}
+    </span>
+  </p>
+
+  <p>
+    <span className="font-medium">Current NDVI:</span>{' '}
+    {analysis.report.current_status?.current_ndvi !== undefined
+      ? analysis.report.current_status.current_ndvi.toFixed(3)
+      : 'N/A'}
+  </p>
+
+  <p>
+    <span className="font-medium">Date:</span>{' '}
+    {analysis.report.current_status?.date ?? 'N/A'}
+  </p>
+</div>
 
     {/* Trends Card */}
     <div className="card glass p-5 shadow-sm">
@@ -431,4 +459,5 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
     </div>
   )
 }
+
 
