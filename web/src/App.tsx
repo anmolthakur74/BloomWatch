@@ -363,9 +363,7 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
   {/* Vegetation Type */}
   <p>
     <span className="font-medium">Vegetation Type:</span>{' '}
-    <span className="ml-2 px-2 py-0.5 rounded bg-green-100 text-green-800">
-      {analysis.report.current_status?.vegetation_type ?? 'N/A'}
-    </span>
+    {analysis.report.current_status?.vegetation_type ?? 'N/A'}
   </p>
 
   {/* Health Status */}
@@ -390,6 +388,21 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
       {analysis.report.current_status?.health_status ?? 'N/A'}
     </span>
   </p>
+
+  {/* Current NDVI */}
+  <p>
+    <span className="font-medium">Current NDVI:</span>{' '}
+    {analysis.report.current_status?.current_ndvi !== undefined
+      ? analysis.report.current_status.current_ndvi.toFixed(3)
+      : 'N/A'}
+  </p>
+
+  {/* Date */}
+  <p>
+    <span className="font-medium">Date:</span>{' '}
+    {analysis.report.current_status?.date ?? 'N/A'}
+  </p>
+</div>
 
   {/* Current NDVI */}
   <p>
@@ -490,6 +503,7 @@ if (ndviRecords.length > 0 && detectedPeaks.length === 0) {
     </div>
   )
 }
+
 
 
 
